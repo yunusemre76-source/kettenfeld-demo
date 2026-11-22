@@ -1,111 +1,81 @@
 <!doctype html>
-<html lang="de">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#111827">
-<title>Kettenfeld – Mobile Game Studio</title>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0b1220"><title>ECHO – Die Logikmaschine</title>
 <style>
-:root{color-scheme:dark;font-family:system-ui,-apple-system,sans-serif;background:#101827;color:#f8fafc}
-*{box-sizing:border-box}body{margin:0;min-height:100dvh;display:grid;place-items:center;padding:18px}
-main{width:min(100%,480px)}h1{font-size:clamp(2rem,8vw,3rem);letter-spacing:-.06em;margin:0 0 4px}
-p{color:#b8c4d5;line-height:1.45;margin:8px 0 20px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.tag{font-size:.72rem;color:#94a3b8;letter-spacing:.12em;text-transform:uppercase}
-.scores{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
-.score{background:#1d293b;border:1px solid #35435a;border-radius:16px;padding:13px 16px}
-.score strong{display:block;font-size:1.8rem;font-variant-numeric:tabular-nums}
-.board{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:7px;padding:10px;background:#263347;border:1px solid #44546c;border-radius:22px;touch-action:manipulation}
-.tile{border:0;border-radius:12px;aspect-ratio:1;min-width:0;box-shadow:inset 0 -5px 0 #0002,0 3px 6px #0003;cursor:pointer;transition:transform .1s ease,filter .1s ease;position:relative}
-.tile:active{transform:scale(.91)}.tile:focus-visible{outline:3px solid white;outline-offset:2px}
-.tile::after{content:"";position:absolute;inset:18% 24% 55%;border-radius:50%;background:#ffffff55}
-.c0{background:#fb7185}.c1{background:#fbbf24}.c2{background:#38bdf8}.c3{background:#a78bfa}
-.controls{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-top:18px}
-button.restart{background:#f8fafc;color:#111827;font:inherit;font-weight:750;border:0;border-radius:12px;padding:13px 18px;cursor:pointer}
-#status{font-size:.95rem;color:#cbd5e1;min-height:2.7em;display:flex;align-items:center}
-footer{color:#8291a6;font-size:.8rem;margin-top:20px}
-@media(max-width:360px){.board{gap:5px;padding:7px}.tile{border-radius:9px}}
-@media(prefers-reduced-motion:reduce){.tile{transition:none}}
-</style>
-</head>
-<body>
-<main>
-  <div class="top"><h1>Kettenfeld</h1><span class="tag">Prototyp 0.1</span></div>
-  <p>Tippe auf mindestens zwei benachbarte Steine derselben Farbe. Je größer die Gruppe, desto mehr Punkte!</p>
-  <div class="scores">
-    <div class="score"><span class="tag">Punkte</span><strong id="score">0</strong></div>
-    <div class="score"><span class="tag">Bestwert</span><strong id="best">0</strong></div>
-  </div>
-  <div class="board" id="board" role="group" aria-label="Spielfeld mit 6 Reihen und 6 Spalten"></div>
-  <div class="controls">
-    <div id="status" role="status" aria-live="polite">Finde eine Farbgruppe!</div>
-    <button class="restart" id="restart" type="button">Neu starten</button>
-  </div>
-  <footer>Mobile Game Studio · Spielbar ohne Konto oder Netzwerk</footer>
-</main>
-<script>
+:root{font-family:system-ui,-apple-system,sans-serif;color:#eaf5ff;background:#0b1220}*{box-sizing:border-box}body{margin:0;min-height:100dvh;display:grid;place-items:center;padding:16px}main{width:min(100%,520px)}header{display:flex;justify-content:space-between;align-items:center;gap:10px}h1{margin:0;font-size:clamp(2.2rem,9vw,3.4rem);letter-spacing:-.07em}.sub{color:#93a8bd;font-size:.85rem}.intro{color:#b3c4d5;line-height:1.5;margin:10px 0 16px}.panel{background:#152237;border:1px solid #344861;border-radius:18px;padding:14px;margin-bottom:12px}.stats{display:flex;justify-content:space-between;align-items:center;gap:10px}.stats strong{font-size:1.1rem}.pips{display:flex;gap:6px}.pip{width:11px;height:11px;border-radius:50%;background:#34475e}.pip.done{background:#4ade80}.pip.current{background:#67e8f9}.board{position:relative;display:grid;grid-template-columns:repeat(6,1fr);gap:5px;background:#101c2e;border:1px solid #3b526b;border-radius:18px;padding:9px;aspect-ratio:1;touch-action:manipulation}.cell{position:relative;display:grid;place-items:center;min-width:0;border-radius:9px;background:#203149;border:1px solid #2e425c;aspect-ratio:1;overflow:hidden}.cell.mirror{cursor:pointer;color:#f7cb73;background:#364057;border:1px solid #a08050;font-size:clamp(20px,6vw,35px);font-weight:750}.cell.mirror:active{transform:scale(.94)}.cell:focus-visible{outline:3px solid white;outline-offset:1px}.cell.source{background:#103b51;border-color:#38bdf8}.cell.target{background:#124c3b;border-color:#34d399}.glyph{font-size:clamp(17px,5vw,28px);z-index:2}.laser{position:absolute;inset:9px;width:calc(100% - 18px);height:calc(100% - 18px);pointer-events:none;z-index:1;overflow:visible}.laser line{stroke:#67e8f9;stroke-width:1.5;stroke-linecap:round;filter:drop-shadow(0 0 1px #22d3ee)}.laser circle{fill:#bffaff}.cell .glyph{position:relative;z-index:2}.status{min-height:54px;margin:12px 0;color:#d6e7f8;line-height:1.4}.controls{display:flex;flex-wrap:wrap;gap:9px}.controls button{font:inherit;font-weight:700;padding:12px 15px;border:1px solid #47617b;border-radius:12px;background:#22344d;color:#f2f8ff;cursor:pointer}.controls .primary{background:#67e8f9;color:#092332;border-color:#67e8f9}.controls button:disabled{opacity:.35;cursor:default}.help{font-size:.85rem;color:#95aabe;line-height:1.5;margin-top:16px}.win{color:#86efac;font-weight:700}@media(max-width:360px){.board{gap:3px;padding:6px}.laser{inset:6px;width:calc(100% - 12px);height:calc(100% - 12px)}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style></head><body><main>
+<header><div><h1>ECHO<span style="color:#67e8f9">.</span></h1><div class="sub">DIE LOGIKMASCHINE · PROTOTYP 0.2</div></div><div class="pips" id="pips" aria-label="Levelfortschritt"></div></header>
+<p class="intro">Drehe die Spiegel, bis der blaue Energiestrahl das grüne Ziel erreicht. Jeder Tipp dreht einen Spiegel um 90°.</p>
+<section class="panel"><div class="stats"><div><div class="sub" id="levelNo">LEVEL 1 / 5</div><strong id="levelTitle">Erster Winkel</strong></div><div style="text-align:right"><div class="sub">DREHUNGEN</div><strong id="moves">0</strong></div></div></section>
+<div class="board" id="board" role="group" aria-label="Logikrätsel mit 6 mal 6 Feldern"><svg class="laser" id="laser" viewBox="0 0 60 60" preserveAspectRatio="none" aria-hidden="true"></svg></div>
+<div class="status" id="status" role="status" aria-live="polite"></div>
+<div class="controls"><button id="prev">Zurück</button><button id="reset">Zurücksetzen</button><button class="primary" id="next" disabled>Nächstes Level</button></div>
+<p class="help">Tipp: Ein Spiegel mit / und ein Spiegel mit \ lenken den Strahl unterschiedlich um. Alle fünf Rätsel sind von Hand erstellt. Keine Anmeldung und keine externen Bibliotheken nötig.</p>
+</main><script>
 "use strict";
-const SIZE=6,COLORS=4,KEY="kettenfeld-best-v1";
-const boardEl=document.getElementById("board");
-const scoreEl=document.getElementById("score");
-const bestEl=document.getElementById("best");
-const statusEl=document.getElementById("status");
-let cells=[],score=0,best=0;
-try{best=Math.max(0,Number(localStorage.getItem(KEY))||0)}catch{}
-function randomColor(){return Math.floor(Math.random()*COLORS)}
-function neighbors(i){
-  const r=Math.floor(i/SIZE),c=i%SIZE,out=[];
-  if(r>0)out.push(i-SIZE);
-  if(r<SIZE-1)out.push(i+SIZE);
-  if(c>0)out.push(i-1);
-  if(c<SIZE-1)out.push(i+1);
-  return out;
+const N=6,STORAGE="echo-puzzle-v02";
+const LEVELS=[{"title":"Erster Winkel","hint":"Ein Spiegel lenkt den Strahl nach oben.","s":[2,0],"t":[0,3],"m":[[2,3,1]]},{"title":"Zwei Richtungen","hint":"Zuerst nach oben, dann nach rechts.","s":[5,0],"t":[2,5],"m":[[5,2,0],[2,2,0],[0,4,1]]},{"title":"Der Umweg","hint":"Drei Spiegel führen zum Ziel.","s":[4,0],"t":[3,1],"m":[[4,4,0],[1,4,1],[1,1,1],[3,4,0]]},{"title":"Vier Ecken","hint":"Der Weg verläuft über die obere Reihe.","s":[5,0],"t":[3,4],"m":[[5,5,1],[0,5,0],[0,2,1],[3,2,1],[2,4,0]]},{"title":"Die lange Leitung","hint":"Der Strahl muss fast das ganze Feld durchqueren.","s":[3,0],"t":[5,4],"m":[[3,5,0],[0,5,1],[0,1,0],[5,1,1],[2,3,1],[4,3,0]]}];
+const el=id=>document.getElementById(id);
+let level=0,moves=0,mirrors=[],won=false,completed=[];
+try{const data=JSON.parse(localStorage.getItem(STORAGE)||"{}");if(Number.isInteger(data.level))level=Math.max(0,Math.min(4,data.level));if(Array.isArray(data.completed))completed=data.completed.filter(x=>Number.isInteger(x)&&x>=0&&x<5)}catch{}
+const dirs=[[0,1],[1,0],[0,-1],[-1,0]];
+function reflect(d,k){return k===0?[3,2,1,0][d]:[1,0,3,2][d]}
+function ray(){
+ const l=LEVELS[level],map=new Map(mirrors.map(m=>[m[0]+","+m[1],m[2]])),seen=new Set(),segments=[];
+ let r=l.s[0],c=l.s[1],d=0,hit=false;
+ for(let i=0;i<90;i++){
+  const key=r+","+c+","+d;if(seen.has(key))break;seen.add(key);
+  if(r===l.t[0]&&c===l.t[1]){hit=true;break}
+  const m=map.get(r+","+c);if(m!==undefined)d=reflect(d,m);
+  const nr=r+dirs[d][0],nc=c+dirs[d][1];if(nr<0||nr>=N||nc<0||nc>=N)break;
+  segments.push([r,c,nr,nc]);r=nr;c=nc;
+ }
+ return {segments,hit};
 }
-function groupAt(start){
-  const color=cells[start],seen=new Set([start]),queue=[start];
-  for(let n=0;n<queue.length;n++)for(const next of neighbors(queue[n]))
-    if(!seen.has(next)&&cells[next]===color){seen.add(next);queue.push(next)}
-  return queue;
-}
-function hasMove(){return cells.some((_,i)=>groupAt(i).length>=2)}
-function fillBoard(){
-  cells=Array.from({length:SIZE*SIZE},randomColor);
-  while(!hasMove())cells=Array.from({length:SIZE*SIZE},randomColor);
-}
-function collapse(){
-  for(let c=0;c<SIZE;c++){
-    const kept=[];
-    for(let r=SIZE-1;r>=0;r--){const value=cells[r*SIZE+c];if(value!==null)kept.push(value)}
-    for(let r=SIZE-1;r>=0;r--)cells[r*SIZE+c]=kept[SIZE-1-r]??randomColor();
-  }
+function save(){try{localStorage.setItem(STORAGE,JSON.stringify({level,completed}))}catch{}}
+function start(i){level=i;mirrors=LEVELS[level].m.map(m=>m.slice());moves=0;won=false;save();render()}
+function turn(i){
+ if(won)return;
+ mirrors[i][2]^=1;moves++;
+ render();
 }
 function render(){
-  scoreEl.textContent=score.toLocaleString("de-DE");
-  bestEl.textContent=best.toLocaleString("de-DE");
-  boardEl.replaceChildren(...cells.map((color,i)=>{
-    const tile=document.createElement("button");
-    tile.type="button";tile.className="tile c"+color;
-    tile.setAttribute("aria-label",["Koralle","Gold","Blau","Violett"][color]+", Reihe "+(Math.floor(i/SIZE)+1)+", Spalte "+(i%SIZE+1));
-    tile.addEventListener("click",()=>tap(i));
-    return tile;
-  }));
+ const l=LEVELS[level],rayData=ray();
+ if(rayData.hit&&!won){won=true;if(!completed.includes(level))completed.push(level);save()}
+ el("levelNo").textContent="LEVEL "+(level+1)+" / 5";
+ el("levelTitle").textContent=l.title;
+ el("moves").textContent=String(moves);
+ el("pips").replaceChildren(...LEVELS.map((_,i)=>{const dot=document.createElement("span");dot.className="pip "+(completed.includes(i)?"done":i===level?"current":"");return dot}));
+ const board=el("board");board.querySelectorAll(".cell").forEach(node=>node.remove());
+ const map=new Map(mirrors.map((m,i)=>[m[0]+","+m[1],i]));
+ for(let r=0;r<N;r++)for(let c=0;c<N;c++){
+  const k=r+","+c,mi=map.get(k),source=r===l.s[0]&&c===l.s[1],target=r===l.t[0]&&c===l.t[1];
+  const cell=document.createElement(mi!==undefined?"button":"div");
+  cell.className="cell"+(mi!==undefined?" mirror":"")+(source?" source":"")+(target?" target":"");
+  if(mi!==undefined){cell.type="button";cell.setAttribute("aria-label","Spiegel Reihe "+(r+1)+", Spalte "+(c+1)+", drehen");cell.addEventListener("click",()=>turn(mi))}
+  const glyph=document.createElement("span");glyph.className="glyph";
+  glyph.textContent=source?"◉":target?"◎":mi!==undefined?(mirrors[mi][2]===0?"/":"\\"):"";
+  cell.appendChild(glyph);board.appendChild(cell);
+ }
+ const svg=el("laser");svg.replaceChildren();
+ // Grid positions match CSS grid; SVG coordinates are derived from actual cell rectangles.
+ const rect=svg.getBoundingClientRect(),cells=board.querySelectorAll(".cell");
+ for(const [r,c,nr,nc] of rayData.segments){
+  const a=cells[r*N+c].getBoundingClientRect(),b=cells[nr*N+nc].getBoundingClientRect();
+  const line=document.createElementNS("http://www.w3.org/2000/svg","line");
+  line.setAttribute("x1",((a.left+a.width/2-rect.left)/rect.width*60).toFixed(3));
+  line.setAttribute("y1",((a.top+a.height/2-rect.top)/rect.height*60).toFixed(3));
+  line.setAttribute("x2",((b.left+b.width/2-rect.left)/rect.width*60).toFixed(3));
+  line.setAttribute("y2",((b.top+b.height/2-rect.top)/rect.height*60).toFixed(3));svg.appendChild(line);
+ }
+ el("status").className="status"+(won?" win":"");
+ el("status").textContent=won?(level===4?"Alle fünf Rätsel gelöst! Großartig!":"Geschafft! Der Strahl erreicht das Ziel."):l.hint;
+ el("prev").disabled=level===0;
+ el("next").disabled=!won||level===4;
+ el("next").textContent=level===4?"Alle Level gelöst":"Nächstes Level";
 }
-function tap(i){
-  const group=groupAt(i);
-  if(group.length<2){statusEl.textContent="Mindestens zwei gleiche Steine verbinden!";return}
-  for(const index of group)cells[index]=null;
-  collapse();
-  const points=group.length*group.length*10;
-  score+=points;
-  if(score>best){best=score;try{localStorage.setItem(KEY,String(best))}catch{}}
-  if(!hasMove()){fillBoard();statusEl.textContent="Keine Gruppen mehr – neues Feld! +"+points+" Punkte"}
-  else statusEl.textContent=group.length+" Steine entfernt · +"+points+" Punkte";
-  render();
-}
-function restart(){
-  score=0;fillBoard();statusEl.textContent="Finde eine Farbgruppe!";render();
-}
-document.getElementById("restart").addEventListener("click",restart);
-restart();
-</script>
-</body>
-</html>
+el("prev").addEventListener("click",()=>{if(level>0)start(level-1)});
+el("reset").addEventListener("click",()=>start(level));
+el("next").addEventListener("click",()=>{if(won&&level<4)start(level+1)});
+window.addEventListener("resize",()=>render());
+start(level);
+</script></body></html>
