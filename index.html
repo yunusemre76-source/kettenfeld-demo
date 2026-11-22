@@ -13,7 +13,7 @@
 </main><script>
 "use strict";
 const N=6,STORAGE="echo-puzzle-v02";
-const LEVELS=[{"title":"Erster Winkel","hint":"Ein Spiegel lenkt den Strahl nach oben.","s":[2,0],"t":[0,3],"m":[[2,3,1]]},{"title":"Zwei Richtungen","hint":"Zuerst nach oben, dann nach rechts.","s":[5,0],"t":[2,5],"m":[[5,2,0],[2,2,0],[0,4,1]]},{"title":"Der Umweg","hint":"Drei Spiegel führen zum Ziel.","s":[4,0],"t":[3,1],"m":[[4,4,0],[1,4,1],[1,1,1],[3,4,0]]},{"title":"Vier Ecken","hint":"Der Weg verläuft über die obere Reihe.","s":[5,0],"t":[3,4],"m":[[5,5,1],[0,5,0],[0,2,1],[3,2,1],[2,4,0]]},{"title":"Die lange Leitung","hint":"Der Strahl muss fast das ganze Feld durchqueren.","s":[3,0],"t":[5,4],"m":[[3,5,0],[0,5,1],[0,1,0],[5,1,1],[2,3,1],[4,3,0]]}];
+const LEVELS=[{"title":"Erster Winkel","hint":"Ein Spiegel lenkt den Strahl nach oben.","s":[2,0],"t":[0,3],"m":[[2,3,1]]},{"title":"Zwei Richtungen","hint":"Zuerst nach oben, dann nach rechts.","s":[5,0],"t":[2,5],"m":[[5,2,0],[2,2,0],[0,4,1]]},{"title":"Der Umweg","hint":"Drei Spiegel führen zum Ziel.","s":[4,0],"t":[3,1],"m":[[4,4,0],[1,4,1],[1,1,0],[3,4,0]]},{"title":"Vier Ecken","hint":"Der Weg verläuft über die obere Reihe.","s":[5,0],"t":[3,4],"m":[[5,5,0],[0,5,1],[0,2,0],[3,2,0],[2,4,0]]},{"title":"Die lange Leitung","hint":"Der Strahl muss fast das ganze Feld durchqueren.","s":[3,0],"t":[5,4],"m":[[3,5,0],[0,5,1],[0,1,0],[5,1,0],[2,3,1],[4,3,0]]}];
 const el=id=>document.getElementById(id);
 let level=0,moves=0,mirrors=[],won=false,completed=[];
 try{const data=JSON.parse(localStorage.getItem(STORAGE)||"{}");if(Number.isInteger(data.level))level=Math.max(0,Math.min(4,data.level));if(Array.isArray(data.completed))completed=data.completed.filter(x=>Number.isInteger(x)&&x>=0&&x<5)}catch{}
