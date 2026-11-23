@@ -65,4 +65,4 @@ function render(){
 $("restart").addEventListener("click",()=>{arr=initial.slice();moves=0;selected=-1;history=[];won=false;notice="";render()});
 $("undo").addEventListener("click",()=>{if(!history.length||won)return;arr=history.pop();moves--;selected=-1;render()});
 $("next").addEventListener("click",()=>{if(won)start(level+1)});
-start(available(Number(progress.lastLevel))?Number(progress.lastLevel):0);</script></body></html>
+const requested=Number(new URLSearchParams(location.search).get("level"));start(new URLSearchParams(location.search).has("level")&&available(requested)?requested:available(Number(progress.lastLevel))?Number(progress.lastLevel):0);</script></body></html>
